@@ -5,31 +5,183 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>AI Tools by hs8tv</title>
 <style>
-:root{--bg:#0f172a;--card:#1e293b;--text:#f1f5f9;--accent:#6366f1}
-body{margin:0;font-family:Segoe UI;background:var(--bg);color:var(--text)}
-header{text-align:center;padding:20px;font-size:24px;font-weight:bold}
-.controls{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:10px}
-input,select,button{padding:8px 12px;border-radius:20px;border:none}
-button{background:var(--accent);color:white;cursor:pointer}
-.section{margin:20px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
-.card{background:var(--card);border-radius:12px;padding:12px;text-align:center;position:relative}
-.card img{width:34px;height:34px;margin-bottom:6px}
-.card a{text-decoration:none;color:var(--text);font-size:14px;font-weight:500}
-.star{position:absolute;top:6px;right:10px;cursor:pointer}
+:root {
+    --bg: #1a202c; /* Dark charcoal */
+    --card: #2d3748; /* Darker slate gray */
+    --text: #e2e8f0; /* Off-white / Light gray */
+    --accent: #0ea5e9; /* Sky blue */
+    --secondary-text: #a0aec0; /* Muted gray for less important text */
+    --border-color: #4a5568; /* Subtle border color */
+}
+
+body {
+    margin: 0;
+    font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-size: 15px; /* Slightly adjusted for better readability */
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh; /* Ensure body takes full viewport height */
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    text-align: center;
+    padding: 25px 20px; /* Slightly more padding for header */
+    font-size: 28px; /* Slightly larger header text */
+    font-weight: bold;
+    margin-bottom: 20px; /* Space below header */
+}
+
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px; /* Increase gap between controls */
+    justify-content: center;
+    margin: 20px;
+    padding: 15px 20px;
+    background: var(--card); /* Consistent background */
+    border-radius: 12px; /* Consistent with card radius */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+input, select, button {
+    padding: 10px 15px; /* Consistent padding */
+    border-radius: 20px; /* Slightly more rounded than cards for softer look */
+    border: 1px solid var(--border-color); /* Subtle border */
+    background: var(--card); /* Match card background for consistency */
+    color: var(--text); /* Match text color */
+    font-size: 15px;
+    transition: all 0.2s ease-in-out;
+}
+
+input:focus, select:focus {
+    outline: none; /* Remove default outline */
+    border-color: var(--accent); /* Highlight border on focus */
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.3); /* Subtle glow on focus */
+}
+
+button {
+    background: var(--accent); /* Use accent color for primary buttons */
+    color: white; /* White text for contrast on accent background */
+    cursor: pointer;
+    border: none; /* No border for accent button */
+}
+
+button:hover {
+    opacity: 0.9; /* Slight opacity change on hover */
+    transform: translateY(-1px); /* Subtle lift on hover */
+}
+
+#search {
+    flex-grow: 1; /* Allow search input to take more space */
+    max-width: 300px; /* Limit max width for better responsiveness */
+}
+
+#categoryFilter {
+    min-width: 150px; /* Ensure sufficient width */
+}
+
+.section {
+    margin: 20px 0; /* Consistent vertical margin for sections */
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* Slightly wider cards by default */
+    gap: 16px; /* Increased gap between cards */
+}
+
+.card {
+    background: var(--card); /* Using the updated card background color */
+    border-radius: 12px; /* More rounded corners */
+    padding: 16px; /* Increased padding */
+    text-align: center;
+    position: relative;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    transition: all 0.2s ease-in-out; /* Smooth transition for hover effects */
+}
+
+.card:hover {
+    transform: translateY(-3px); /* Slight lift effect on hover */
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+}
+
+.card img {
+    width: 40px; /* Slightly larger icons */
+    height: 40px;
+    margin-bottom: 8px; /* Adjusted spacing */
+}
+
+.card a {
+    text-decoration: none;
+    color: var(--text);
+    font-size: 15px; /* Slightly larger font for tool names */
+    font-weight: 500;
+}
+
+.star {
+    position: absolute;
+    top: 10px; /* Adjusted position */
+    right: 12px; /* Adjusted position */
+    font-size: 1.2em; /* Slightly larger star icon */
+    cursor: pointer;
+    color: var(--secondary-text); /* Muted color for unselected star */
+}
+
+/* Highlight for favorited stars - this rule needs to be adjusted in JS later for accurate color toggle */
+/* The current JS dynamically sets style attribute, which overrides this. Will be handled in JS section */
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    .grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Adjust for medium screens */
+    }
+    .controls {
+        flex-direction: column;
+        align-items: center;
+    }
+    #search, #categoryFilter, button {
+        width: 100%; /* Full width for controls on small screens */
+        max-width: 90%; /* Max width to prevent stretching too wide */
+    }
+    header {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .grid {
+        grid-template-columns: 1fr; /* Single column layout for very small screens */
+    }
+    .card {
+        width: 90%; /* Adjust card width */
+        margin: 0 auto; /* Center cards */
+    }
+    .controls {
+        margin: 15px;
+        gap: 10px;
+    }
+    header {
+        font-size: 20px;
+        padding: 15px;
+    }
+}
 </style>
 </head>
 <body>
 
 <header>🚀 AI Tools by hs8tv</header>
 
-<div class="controls">
-<input type="text" id="search" placeholder="Search tool...">
-<select id="categoryFilter"><option value="all">All Categories</option></select>
-<button onclick="showFavorites()">⭐ Favorites</button>
-</div>
+<main>
+    <div class="controls">
+    <input type="text" id="search" placeholder="Search tool...">
+    <select id="categoryFilter"><option value="all">All Categories</option></select>
+    <button onclick="showFavorites()">⭐ Favorites</button>
+    </div>
 
-<div id="tools"></div>
+    <div id="tools"></div>
+</main>
 
 <script>
 const toolsData = {
@@ -40,7 +192,8 @@ const toolsData = {
 "Gemini":"https://gemini.google.com",
 "Grok":"https://grok.x.ai",
 "Perplexity":"https://www.perplexity.ai",
-"MS Copilot":"https://copilot.microsoft.com"
+"MS Copilot":"https://copilot.microsoft.com",
+"Deepseek":"https://chat.deepseek.com/sign_in" /* Added Deepseek */
 },
 
 "Presentations":{
