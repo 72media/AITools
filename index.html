@@ -1,111 +1,223 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>AI Tools by hs8tv</title>
 <style>
-:root{
---bg:#0f172a;
---card:#1e293b;
---text:#f1f5f9;
---accent:#6366f1;
-}
+:root{--bg:#0f172a;--card:#1e293b;--text:#f1f5f9;--accent:#6366f1}
 body{margin:0;font-family:Segoe UI;background:var(--bg);color:var(--text)}
-header{text-align:center;padding:18px;font-size:22px;font-weight:bold}
+header{text-align:center;padding:20px;font-size:24px;font-weight:bold}
 .controls{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:10px}
-input,button{padding:8px 12px;border-radius:20px;border:none}
+input,select,button{padding:8px 12px;border-radius:20px;border:none}
 button{background:var(--accent);color:white;cursor:pointer}
 .section{margin:20px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
 .card{background:var(--card);border-radius:12px;padding:12px;text-align:center;position:relative}
 .card img{width:34px;height:34px;margin-bottom:6px}
+.card a{text-decoration:none;color:var(--text);font-size:14px;font-weight:500}
 .star{position:absolute;top:6px;right:10px;cursor:pointer}
-#loginBox{text-align:center;margin-top:100px}
 </style>
 </head>
 <body>
 
-<div id="loginBox">
-<h2>🔐 Admin Login</h2>
-<input id="user" placeholder="Username"><br><br>
-<input id="pass" type="password" placeholder="Password"><br><br>
-<button onclick="login()">Login</button>
-</div>
-
-<div id="app" style="display:none">
-<header>🚀 85+ AI Tools Dashboard  by hs8tv</header>
+<header>🚀 AI Tools by hs8tv</header>
 
 <div class="controls">
-<input id="search" placeholder="Search tools...">
-<button onclick="showFav()">⭐ Favorites</button>
-<button onclick="showAll()">📂 All</button>
+<input type="text" id="search" placeholder="Search tool...">
+<select id="categoryFilter"><option value="all">All Categories</option></select>
+<button onclick="showFavorites()">⭐ Favorites</button>
 </div>
 
 <div id="tools"></div>
-</div>
 
 <script>
 const toolsData = {
-"Research":["ChatGPT","Copilot","Gemini","Abacus","Perplexity"],
-"Image":["Fotor","Dalle 3","Stability AI","Midjourney","Microsoft Designer"],
-"CopyWriting":["Rytr","Copy AI","Writesonic","Adcreative AI"],
-"Writing":["Jasper","HIX AI","Jenny AI","Textblaze","Quillbot"],
-"Website":["10Web","Durable","Framer","Style AI"],
-"Video":["Klap","Opus","Eightify","InVideo","HeyGen","Runway","ImgCreator AI","Morphstudio"],
-"Meeting":["Tldv","Otter","Noty AI","Fireflies"],
-"SEO":["VidIQ","Seona AI","BlogSEO","Keywrds ai"],
-"Chatbot":["Droxy","Chatbase","Mutual info","Chatsimple"],
-"Presentation":["Decktopus","Slides AI","Gamma AI","Designs AI","Beautiful AI"],
-"Automation":["Make","Zapier","Xembly","Bardeen"],
-"Prompts":["FlowGPT","Alicent AI","PromptBox","Promptbase","Snack Prompt"],
-"UI/UX":["Figma","Uizard","UiMagic","Photoshop"],
-"Design":["Canva","Flair AI","Designify","Clipdrop","Autodraw","Magician design"],
-"Logo Generator":["Looka","Designs AI","Brandmark","Stockimg AI","Namecheap"],
-"Audio":["Lovo ai","Eleven labs","Songburst AI","Adobe Podcast"],
-"Productivity":["Merlin","Tinywow","Notion AI","Adobe Sensei","Personal AI"],
-"Social Media":["Tapilo","Typefully","Hypefury","TweetHunter"]
-};
 
-let favorites = JSON.parse(localStorage.getItem("favTools")||"[]");
+"Chatbots":{
+"ChatGPT":"https://chat.openai.com",
+"Claude":"https://claude.ai",
+"Gemini":"https://gemini.google.com",
+"Grok":"https://grok.x.ai",
+"Perplexity":"https://www.perplexity.ai",
+"MS Copilot":"https://copilot.microsoft.com"
+},
 
-function login(){
-if(user.value==="admin" && pass.value==="hs8tv"){
-loginBox.style.display="none";
-app.style.display="block";
-render();
-}else alert("Wrong login");
+"Presentations":{
+"Gamma":"https://gamma.app",
+"Pitch":"https://pitch.com",
+"Plus AI":"https://plusai.com",
+"PopAI":"https://popai.pro",
+"Slidesgo":"https://slidesgo.com",
+"Tome":"https://tome.app",
+"Beautiful.ai":"https://www.beautiful.ai",
+"PresentonsAI":"https://presentons.ai"
+},
+
+"Coding":{
+"AskCodi":"https://askcodi.com",
+"Codiga":"https://codiga.io",
+"Cursor":"https://cursor.sh",
+"Qodo":"https://qodo.ai",
+"Replit":"https://replit.com",
+"Tabnine":"https://tabnine.com",
+"GitHub Copilot":"https://github.com/features/copilot",
+"Bolt":"https://bolt.new",
+"Lovable":"https://lovable.dev",
+"Windsurf":"https://windsurf.ai"
+},
+
+"Emails":{
+"Clipit AI":"https://clipit.ai",
+"Friday":"https://fridaymail.ai",
+"MailMaestro":"https://mailmaestro.com",
+"Shortwave":"https://shortwave.com",
+"Superhuman":"https://superhuman.com"
+},
+
+"Image Generation":{
+"Adobe Firefly":"https://firefly.adobe.com",
+"DALL·E":"https://openai.com/dall-e",
+"FLUX":"https://flux.ai",
+"Ideogram":"https://ideogram.ai",
+"Midjourney":"https://midjourney.com",
+"Recraft":"https://recraft.ai",
+"Stable Diffusion":"https://stability.ai",
+"LucidPic":"https://lucidpic.com",
+"Leonardo AI":"https://leonardo.ai"
+},
+
+"Spreadsheets":{
+"Bricks":"https://thebricks.com",
+"Formula Bot":"https://formulabot.com",
+"Gigasheet":"https://gigasheet.com",
+"Rows AI":"https://rows.com",
+"SheetAI":"https://sheetai.app"
+},
+
+"Meetings":{
+"Avoma":"https://avoma.com",
+"Equal Time":"https://equaltime.io",
+"Fathom":"https://fathom.video",
+"Fellow":"https://fellow.app",
+"Fireflies":"https://fireflies.ai",
+"Krisp":"https://krisp.ai",
+"Otter":"https://otter.ai"
+},
+
+"Workflows":{
+"Integrately":"https://integrately.com",
+"Make":"https://make.com",
+"Monday":"https://monday.com",
+"n8n":"https://n8n.io",
+"Wrike":"https://wrike.com",
+"Zapier":"https://zapier.com"
+},
+
+"Writing":{
+"Copy.ai":"https://copy.ai",
+"Grammarly":"https://grammarly.com",
+"Jasper":"https://jasper.ai",
+"Jobtob":"https://jobtob.com",
+"Quarkle":"https://quarkle.ai",
+"Quillbot":"https://quillbot.com",
+"Rytr":"https://rytr.me",
+"Sudowrite":"https://sudowrite.com",
+"Writetone":"https://writetone.com",
+"Jenni AI":"https://jenni.ai",
+"Tyx":"https://tyx.ai"
+},
+
+"Scheduling":{
+"Calendly":"https://calendly.com",
+"Clockwise":"https://getclockwise.com",
+"Motion":"https://usemotion.com",
+"Reclaim":"https://reclaim.ai",
+"Taskade":"https://taskade.com",
+"Trevor AI":"https://trevorai.com"
+},
+
+"Video":{
+"Descript":"https://descript.com",
+"Haiper":"https://haiper.ai",
+"Kling":"https://klingai.com",
+"Krea":"https://krea.ai",
+"LTX Studio":"https://ltx.studio",
+"Luma":"https://lumalabs.ai",
+"Pika":"https://pika.art",
+"Runway":"https://runwayml.com",
+"Sora":"https://openai.com/sora",
+"DeepAI":"https://deepai.org",
+"LucidAI":"https://lucid.ai"
+},
+
+"Graphic Design":{
+"AutoDraw":"https://autodraw.com",
+"Canva":"https://canva.com",
+"Design.com":"https://design.com",
+"Framer":"https://framer.com",
+"Uizard":"https://uizard.io",
+"Microsoft Designer":"https://designer.microsoft.com"
+},
+
+"Knowledge Management":{
+"Mem":"https://mem.ai",
+"Notion":"https://notion.so",
+"Tetra":"https://tetra.com"
+},
+
+"Data Visualization":{
+"Deskpilot":"https://deskpilot.ai",
+"Flourish":"https://flourish.studio",
+"Julius":"https://julius.ai",
+"Visme":"https://visme.co",
+"Zing Data":"https://zingdata.com"
 }
 
-function render(filter="",favOnly=false){
-tools.innerHTML="";
-for(const cat in toolsData){
-let sec=`<div class="section"><h2>${cat}</h2><div class="grid">`;
-toolsData[cat].forEach(name=>{
-if(filter && !name.toLowerCase().includes(filter.toLowerCase())) return;
-if(favOnly && !favorites.includes(name)) return;
-let star=favorites.includes(name)?"⭐":"☆";
-sec+=`
-<div class="card">
-<div class="star" onclick="toggleFav('${name}')">${star}</div>
-<img src="https://www.google.com/s2/favicons?domain=${name.toLowerCase().replace(/ /g,'')}.com&sz=64">
-<div>${name}</div>
-</div>`;
+};
+
+let favorites=JSON.parse(localStorage.getItem("favTools")||"[]");
+
+const catSel=document.getElementById("categoryFilter");
+Object.keys(toolsData).forEach(c=>{
+let o=document.createElement("option");
+o.value=c;o.textContent=c;catSel.appendChild(o);
 });
+
+function render(filter="",cat="all",favOnly=false){
+tools.innerHTML="";
+for(const c in toolsData){
+if(cat!=="all"&&c!==cat)continue;
+let sec=`<div class="section"><h2>${c}</h2><div class="grid">`;
+for(const n in toolsData[c]){
+if(!n.toLowerCase().includes(filter.toLowerCase()))continue;
+if(favOnly&&!favorites.includes(n))continue;
+let url=toolsData[c][n];
+let domain=new URL(url).hostname;
+let star=favorites.includes(n)?"⭐":"☆";
+sec+=`<div class="card">
+<div class="star" onclick="toggleFav('${n}')">${star}</div>
+<a href="${url}" target="_blank">
+<img src="https://www.google.com/s2/favicons?domain=${domain}&sz=64">
+<div>${n}</div></a></div>`;
+}
 sec+="</div></div>";
 tools.innerHTML+=sec;
 }
 }
 
-function toggleFav(name){
-favorites=favorites.includes(name)?favorites.filter(x=>x!==name):[...favorites,name];
+function toggleFav(n){
+favorites=favorites.includes(n)?favorites.filter(x=>x!==n):[...favorites,n];
 localStorage.setItem("favTools",JSON.stringify(favorites));
-render(search.value);
+render(search.value,categoryFilter.value);
 }
 
-function showFav(){render(search.value,true)}
-function showAll(){render(search.value,false)}
-search.oninput=()=>render(search.value);
+function showFavorites(){render(search.value,categoryFilter.value,true)}
+search.oninput=()=>render(search.value,categoryFilter.value);
+categoryFilter.onchange=()=>render(search.value,categoryFilter.value);
+
+render();
 </script>
+
 </body>
 </html>
